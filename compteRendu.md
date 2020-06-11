@@ -108,7 +108,7 @@ do \
 	planemo l $i; \
 done
 # Just a warning because ncbi_psiblast_wrapper.xmlgedit have no test
-planemo t 							# See an error
+planemo t --test_data ../../test-data/	# See an error
 firefox tool_test_output.html		# See that ncbi_deltablast_wrapper.xml make an error
 mv ncbi_deltablast_wrapper.xml ..	
 ```
