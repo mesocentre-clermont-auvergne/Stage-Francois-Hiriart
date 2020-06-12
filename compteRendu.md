@@ -90,6 +90,7 @@ planemo t --failed 	# Check only the test which failed
 #### Travail effectué
 
 
+* Ajout du [galaxy_blast](https://github.com/mesocentre-clermont-auvergne/galaxy_blast) de peterjc en tant que sous-module dans le répertoire Stage-Francois-Hiriart mais la modification du sous-module entrainait des erreurs car sur github le sous-module devenait un lien pointant vers le github de peterjc qui ne contenait pas les commits ajoutés.
 commandes lancées:
 
 ```
@@ -110,8 +111,17 @@ done
 # Just a warning because ncbi_psiblast_wrapper.xmlgedit have no test
 planemo t --test_data ../../test-data/	# See an error
 firefox tool_test_output.html		# See that ncbi_deltablast_wrapper.xml make an error
-mv ncbi_deltablast_wrapper.xml ..	
+mv ncbi_deltablast_wrapper.xml ..
 ```
 
+* Pour pallier le problème on crée un second dépot git qui contient une copie de du dépot de peterjc et on c'est cette copie qu'on rajoute en sous-module car on pourra la modifier
+commande lancées:
+
+```
+git clone https://github.com/peterjc/galaxy_blast.git
+cd galaxy_blast/
+git remote set-url origin https://github.com/mesocentre-clermont-auvergne/galaxy_blast.git
+git push -u origin master
+```
 ## Conclusion
 
