@@ -123,5 +123,51 @@ cd galaxy_blast/
 git remote set-url origin https://github.com/mesocentre-clermont-auvergne/galaxy_blast.git
 git push -u origin master
 ```
+
+* Modification du fichier ncbi_macros.xml pour permettre de choisir une base de donnée blast qui vient de l'historique.
+
+```
+gedit ncbi_macros.xml
+planemo l								# Verify that the XML syntax is correct
+planemo t --test_data ../../test-data	# Make tests to verify if modification is without bug
+```
+
+#### Point bloquants, Questions
+
+* Les modification dans le fichiers macro.xml entraine des erreurs de correspondances avec les variables du fichier ncbi\_blastdbcmd_wrapper.xml
+
+#### Travail prévu
+
+* Modifier le fichier ncbi\_blastdbcmd\_wrapper.xml pour rendre les modifications du fichiers ncbi_macros.xml compatibles
+
+
+### 08-12/06/2020
+#### Travail effectué
+
+* Modification du fichier ncbi\_blastdbcmd\_wrapper.xml pour qu'il permette de choisir une base de donnée provenant de l'historique. Pour voir les erreurs et tester le script les tests ont été fait en utilisant le `planemo s --no_cleanup --test_data test-data`.
+
+#### Point bloquants, Questions
+
+Il y a eu des blocages une fois les modifications faites sur la ligne 17 du fichier ncbi\_blastdbcmd\_wrapper.xml
+```
+	-db "{os.path.join($db_opts.db_origin.histdb.extra_files_path, "blastdb")}"
+```
+
+Cette ligne de code entrainait l'erreur suivante:
+```
+/tmp/tmpmkm0xpzn/job_working_directory/000/11/tool_script.sh: line 13: [: 0: unary operator expected
+BLAST Database error: No alias or index file found for protein database [{os.path.join(/tmp/tmpmkm0xpzn/files/000/dataset_2_files,] in search path [/tmp/tmpmkm0xpzn/job_working_directory/000/11/working::]
+```
+
+Cette erreur a été corrigée en changeants les guillemets extérieurs par des apostrophes car les doubles paires de guillemets s'interféraient entre eux.
+```
+-db '${os.path.join($db_opts.db_origin.histdb.extra_files_path, "blastdb")}'`.
+```
+
+Mais cette syntaxe aussi est correcte 
+```
+	-db "$db_opts.db_origin.histdb.extra_files_path/blastdb"
+```
+
 ## Conclusion
 
