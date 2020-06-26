@@ -1,0 +1,11 @@
+data/bsmap_fasta.loc.sample.i
+data/README.txt.i
+data/methratio.patch.i
+data/bsmap_wrapper.sh.i
+data/parsewig.xml.i
+data/bsmap_meth_caller.xml.i
+data/tool_data_table_conf.xml.sample.i
+data/bsmap.xml.i
+data/bsmap_meth_caller.sh.i
+data/wig_extractor.pl.i
+data/parsewig.sh.i

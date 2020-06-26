@@ -1,0 +1,235 @@
+<tool id="bsmap" name="BSMAP Mapper">
+	<requirements>
+	    <requirement type='package' version="2.6">bsmap</requirement>
+	</requirements>
+        <command interpreter="bash">
+              bsmap_wrapper.sh
+			##Reference genome
+			##ref="${reference.fields.path}"
+			#if $refGenomeSource.genomeSource == "history":
+				ref="${refGenomeSource.myFile}"
+			#else
+				ref="${refGenomeSource.builtinFile.fields.path}"
+			#end if
+			##Output files (SAM output, BSMAP summary)
+			mapped=$mapped
+			##Temp directory
+			tempdir=$mapped.files_path
+			summary=$summary
+			#if str($singlePaired.sPaired) == "single":
+			  library="single"
+			  mate1=$singlePaired.sInput1
+			  #if str($singlePaired.sParams.sSettingsType) == "full":
+			    fullparam=true
+			    qual=$singlePaired.sParams.qual
+			    threshold=$singlePaired.sParams.threshold
+			    lowqual=$singlePaired.sParams.lowqual
+			    adapter=$singlePaired.sParams.adapter
+			    firstn=$singlePaired.sParams.firstn
+			    repeat_reads=$singlePaired.sParams.repeat_reads
+			    seed_size=$singlePaired.sParams.seed_size
+			    mismatch=$singlePaired.sParams.mismatch
+			    equal_best=$singlePaired.sParams.equal_best
+			    start=$singlePaired.sParams.start
+			    end=$singlePaired.sParams.end
+			    index_interval=$singlePaired.sParams.index_interval
+			    seed_random=$singlePaired.sParams.seed_random
+			    rrbs=$singlePaired.sParams.rrbs
+			    mode=$singlePaired.sParams.mode
+			    align_info=$singlePaired.sParams.align_info     
+			  #end if
+			#else:
+			  library="paired"
+			  mate1=$singlePaired.pInput1
+			  mate2=$singlePaired.pInput2
+			  unpaired=$unpaired
+			  #if str($singlePaired.pParams.pSettingsType) == "full":    
+			    fullparam=true
+			    qual=$singlePaired.pParams.qual
+			    threshold=$singlePaired.pParams.threshold
+			    lowqual=$singlePaired.pParams.lowqual
+			    adapter=$singlePaired.pParams.adapter
+			    firstn=$singlePaired.pParams.firstn
+			    repeat_reads=$singlePaired.pParams.repeat_reads
+			    seed_size=$singlePaired.pParams.seed_size
+			    mismatch=$singlePaired.pParams.mismatch
+			    equal_best=$singlePaired.pParams.equal_best
+			    start=$singlePaired.pParams.start
+			    end=$singlePaired.pParams.end
+			    index_interval=$singlePaired.pParams.index_interval
+			    seed_random=$singlePaired.pParams.seed_random
+			    rrbs=$singlePaired.pParams.rrbs
+			    mode=$singlePaired.pParams.mode
+			    align_info=$singlePaired.pParams.align_info     
+			    maxinsert=$singlePaired.pParams.maxinsert  
+			    mininsert=$singlePaired.pParams.mininsert  
+			  #end if
+			#end if
+        </command>
+  <inputs>
+
+  <conditional name="refGenomeSource">
+      <param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in reference?">
+        <option value="builtin">Use a built-in reference</option>
+        <option value="history">Use one from the history</option>
+      </param>
+      <when value="builtin">
+        <param name="builtinFile" type="select" label="Select the reference genome">
+          <options from_data_table="bsmap_fasta">
+            <filter type="sort_by" column="2" />
+            <validator type="no_options" message="No reference genomes are available" />
+          </options>
+        </param>
+      </when>
+      <when value="history">
+        <param name="myFile" type="data" format="fasta" label="Select the reference genome" />
+      </when> 
+  </conditional>
+  
+  <conditional name="singlePaired">
+      <param name="sPaired" type="select" label="Is this library mate-paired?">
+        <option value="single">Single-end</option>
+        <option value="paired">Paired-end</option>
+      </param>
+      <when value="single">
+        <param name="sInput1" type="data" format="fastq,fasta" label="FASTQ file" help="Must have ASCII encoded quality scores"/>
+        <conditional name="sParams">
+          <param name="sSettingsType" type="select" label="BSMAP settings to use" help="For most mapping needs use Commonly used settings. If you want full control use Full parameter list">
+            <option value="preSet">Commonly used</option>
+            <option value="full">Full parameter list</option>
+          </param>
+          <when value="preSet" />
+          <when value="full">
+	    <param name="qual" type="select" label="Select the type of FastQ qualities">
+		<option value="33">phred33-quals</option>
+		<option value="64">phred64-quals</option>
+	    </param>
+	    <param name="threshold" type="integer" value="0" label="Quality threshold in trimming" help="0-40, default=0 (no trim)" min="0" max="40" />
+	    <param name="lowqual" type="integer" value="5" label="Filter low-quality reads containing >n Ns" help="default=5" />
+	    <param name="adapter" type="text" value="none" label="3-end adapter sequence" help="default: none (no trim)" />
+	    <param name="firstn" type="integer" value="144" label="Map the first N nucleotides of the read" help="default:144 (map the whole read)" />
+	    
+	    <param name="repeat_reads" type="select" label="How to report repeat hits">
+	      <option value="0">none(unique hit only)</option>
+	      <option value="1">random one</option>
+	    </param>
+	    
+	    <param name="seed_size" type="integer" value="16" label="Seed size" min="8" max="16" help="default=16(WGBS mode), 12(RRBS mode)" />
+	    <param name="mismatch" type="integer" value="2" label="Maximum number of mismatches allowed on a read" max="15" />
+	    <param name="equal_best" type="integer" value="20" label="Maximum number of equal best hits to count" max="1000" />
+	    <param name="start" type="integer" value="1" label="Start from the Nth read or read pair" />
+	    <param name="end" type="integer" value="4294967295" label="End at the Nth read or read pair" />
+	    <param name="index_interval" type="integer" value="4" label="Index interval" />
+	    <param name="seed_random" type="integer" value="-1" label="Seed for random number generation used in selecting multiple hits" help="other seed values generate pseudo random number based on read index number, to allow reproducible mapping results" />
+	    <param name="rrbs" type="text" value="none" label="Activating RRBS mapping mode and set restriction enzyme digestion sites" help="digestion position marked by '-', example: -D C-CGG for MspI digestion. default: none (whole genome shotgun bisulfite mapping mode)" />
+	     <param name="mode" type="select" label="Set mapping strand information">
+		<option value="0">only map to 2 forward strands</option>
+		<option value="1">map SE or PE reads to all 4 strands</option>
+	    </param>
+	    <param name="align_info" type="text" value="none" label="Set alignment information for the additional nucleotide transition" help="is in the form of two different nucleotides N1N2,indicating N1 in the reads could be mapped to N2 in the reference sequences. default: -M TC, corresponds to C=>U(T) transition in bisulfite conversion. example: -M GA could be used to detect A=>I(G) transition in RNA editing." />
+          </when> <!-- full -->
+        </conditional> <!-- sParams -->
+      </when> <!-- single -->
+   
+      <when value="paired">
+        <param name="pInput1" type="data" format="fastq,fasta" label="Forward FASTQ file" />
+	<param name="pInput2" type="data" format="fastq,fasta" label="Reverse FASTQ file" />
+
+        <conditional name="pParams">
+          <param name="pSettingsType" type="select" label="BSMAP settings to use" help="For most mapping needs use Commonly used settings. If you want full control use Full parameter list">
+            <option value="preSet">Commonly used</option>
+            <option value="full">Full parameter list</option>
+          </param>
+         <when value="preSet" />
+          <when value="full">
+	    <param name="qual" type="select" label="Select the type of FastQ qualities">
+		<option value="33">phred33-quals</option>
+		<option value="64">phred64-quals</option>
+	    </param>
+	    
+	    <param name="mininsert" type="integer" value="28" label="Minimal insert size allowed" />
+	    <param name="maxinsert" type="integer" value="500" label="Maximal insert size allowed" />
+	    
+	    <param name="threshold" type="integer" value="0" label="Quality threshold in trimming" help="0-40, default=0 (no trim)" min="0" max="40" />
+	    <param name="lowqual" type="integer" value="5" label="Filter low-quality reads containing >n Ns" help="default=5" />
+	    <param name="adapter" type="text" value="none" label="3-end adapter sequence" help="default: none (no trim)" />
+	    <param name="firstn" type="integer" value="144" label="Map the first N nucleotides of the read" help="default:144 (map the whole read)" />
+	    
+	    <param name="repeat_reads" type="select" label="How to report repeat hits">
+	      <option value="0">none(unique hit only)</option>
+	      <option value="1">random one</option>
+	    </param>
+	    
+	    <param name="seed_size" type="integer" value="16" label="Seed size" min="8" max="16" help="default=16(WGBS mode), 12(RRBS mode)" />
+	    <param name="mismatch" type="integer" value="2" label="Maximum number of mismatches allowed on a read" max="15" />
+	    <param name="equal_best" type="integer" value="20" label="Maximum number of equal best hits to count" max="1000" />
+	    <param name="start" type="integer" value="1" label="Start from the Nth read or read pair" />
+	    <param name="end" type="integer" value="4294967295" label="End at the Nth read or read pair" />
+	    <param name="index_interval" type="integer" value="4" label="Index interval" />
+	    <param name="seed_random" type="integer" value="-1" label="Seed for random number generation used in selecting multiple hits" help="other seed values generate pseudo random number based on read index number, to allow reproducible mapping results" />
+	    <param name="rrbs" type="text" value="none" label="Activating RRBS mapping mode and set restriction enzyme digestion sites" help="digestion position marked by '-', example: -D C-CGG for MspI digestion. default: none (whole genome shotgun bisulfite mapping mode)" />
+	     <param name="mode" type="select" label="Set mapping strand information">
+		<option value="0">only map to 2 forward strands</option>
+		<option value="1">map SE or PE reads to all 4 strands</option>
+	    </param>
+	    <param name="align_info" type="text" value="none" label="Set alignment information for the additional nucleotide transition" help="is in the form of two different nucleotides N1N2,indicating N1 in the reads could be mapped to N2 in the reference sequences. default: -M TC, corresponds to C=>U(T) transition in bisulfite conversion. example: -M GA could be used to detect A=>I(G) transition in RNA editing." />
+
+	    
+          </when> <!-- full -->
+        </conditional> <!-- pParams -->
+      </when> <!-- paired -->
+    </conditional> <!-- singlePaired -->
+  
+  
+ </inputs>
+ <outputs>
+        <data name="mapped" format="sam" label="BSMAP Mapped Reads" />
+	<data name="summary" format="txt" label="BSMAP Mapping Summary" />
+	<data name="unpaired" format ="sam" label="BSMAP Unpaired Hits">
+	  <filter>(singlePaired['sPaired'] == 'paired')</filter>
+	</data>
+
+ </outputs>
+ <help>
+**What it does**
+
+BSMAP is a short reads mapping software for bisulfite sequencing reads. It has the following features:
+
+   - read length up to 144 nt, allow up to 15 mismatches, gap size up to 3 bp.
+
+   - support single end and pair end mapping. support multi-thread mapping.
+
+   - support both "Lister protocol" (sequence 2 forward strands only) and "Cokus protocol" (sequence all 4 bisulfite converted strands)
+
+   - reads are directly mapped to original reference genome sequence, no need to preprocess the reads and reference genome to convert C to T.
+
+   - support both whole genome bisulfite sequencing (WGBS) mode and reduced representation bisulfite sequencing (RRBS) mode, allow changing the digestion site information to support different digestion enzymes for RRBS.
+
+   - allow trimming adapter sequences and low quality nucleotides from the 3'end of reads
+
+   - allow trade off between speed/memory usage/mapping sensitivity. For human genome, the RRBS mode uses ~3GB. In WGBS mode, the typical memory usage is ~9GB, but can be as low as 5GB.
+
+   - allow alignment for other nucleotide transitions, for example, can be set to detect the A=>I(G) transition in RNA editing.
+
+.. _BSMAP: http://code.google.com/p/bsmap/
+
+**Input formats**
+
+BSMAP accepts files in FASTA/FASTQ format.
+
+**Outputs**
+
+The output contains the following files:
+
+    -  mapped reads in SAM format
+    
+    -  mapping summary
+    
+    -  unpaired hits (only for paired-end mapping)
+   
+ </help>
+ 
+ <tests>
+ </tests>
+</tool>
+

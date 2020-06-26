@@ -1,0 +1,67 @@
+<tool id="parsewig" name="WIG parser">
+        <command interpreter="bash">
+               parsewig.sh			
+			input=$input
+			extract=$extract
+			#if str($selectContext.context) == "yes":
+			  context="$selectContext.cpg,$selectContext.chg,$selectContext.chh"
+			#end if
+			depth=$depth			
+			cov_out=$coverage
+			meth_out=$methylation
+        </command>
+  <inputs>
+	<param name="input" format="text" type="data" label="Methylation calling output file" />
+	<param name="extract" type="select" label="Which files should be extracted?">
+	  <option value="m">Methylation</option>
+	  <option value="c">Coverage</option>
+	  <option value="b">Methylation and Coverage</option>
+	</param>
+	
+	<conditional name="selectContext">
+	  <param name="context" type="select" label="Limit the output to a specific context?">
+	    <option value="no">No, report all</option>
+	    <option value="yes">Yes</option>
+	  </param>
+	  <when value="no" />
+	  <when value="yes">
+	    <param name="cpg" type="boolean" truevalue="cpg" falsevalue="" checked="False" label="report loci in CpG context" />  
+	    <param name="chg" type="boolean" truevalue="chg" falsevalue="" checked="False" label="report loci in CHG context" />  
+	    <param name="chh" type="boolean" truevalue="chh" falsevalue="" checked="False" label="report loci in CHH context" />  
+	  </when>
+	</conditional>
+	<param name="depth" type="integer" value="1" label="Minimum sequencing depth to report loci" />
+  </inputs>
+  <outputs>
+	<data name="methylation" format ="wig" label="WIG parser: Methylation">
+	  <filter>(extract == 'm' or extract == 'b' )</filter>
+	</data>
+	<data name="coverage" format ="wig" label="WIG parser: Coverage">
+	  <filter>(extract == 'c' or extract == 'b' )</filter>
+	</data>
+
+  </outputs>
+  <help>
+**What it does**
+
+This is a parser for the output files coming from "Bismark Methylation Caller" or "BSMAP Methylation Caller". The data is parsed into WIGGLE format.
+
+Other options:
+    -	define context of cytosines should be reported (CpG, CHG, CHH)
+    -	define the minimum sequencing depth (coverage) of cytosines should be reported
+
+**Output format**
+
+You get one file for methylation and/or coverage (depending on what you choose under "Which files should be etracted?").
+
+The output has the following columns::    
+
+    Column  	Description
+    ------  	--------------------------------------------------------
+      1 	cytosine position
+      2  	methylation state (in %) / coverage
+		(positive value for plus strand / negative value for minus strand)
+
+  </help>
+</tool>
+

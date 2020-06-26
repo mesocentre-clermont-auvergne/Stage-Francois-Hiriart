@@ -1,0 +1,16 @@
+#This is a sample file distributed with Galaxy that enables BSMAP
+#to use a directory of reference FastA sequences data files.The bsmap_fasta.loc
+#file has this format (longer white space characters are TAB characters):
+#
+#<unique_build_id>   <dbkey>   <display_name>   <file_path>
+#
+#
+#Your bsmap_fasta.loc file should include an entry per line for each
+reference you have stored. For example:
+#
+#phiX174              phiX   phiX174          /depot/data2/galaxy/phiX/base/phiX.fasta
+#hg18canon            hg18   hg18 Canonical   /depot/data2/galaxy/hg18/base/hg18canon.fasta
+#hg18full             hg18   hg18 Full        /depot/data2/galaxy/hg18/base/hg18full.fasta
+#/orig/path/hg19.fa   hg19   hg19             /depot/data2/galaxy/hg19/base/hg19.fasta
+#...etc...
+#

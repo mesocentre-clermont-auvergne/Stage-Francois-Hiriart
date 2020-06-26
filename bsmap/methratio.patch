@@ -1,0 +1,50 @@
+--- methratio.py.orig	2012-04-10 20:54:39.000000000 +0200
++++ methratio.py	2012-08-16 10:54:42.000000000 +0200
+@@ -1,4 +1,5 @@
+-import sys, time, os, array, optparse
++#!/usr/bin/python
++import sys, time, os, array, optparse, re
+ usage = "usage: %prog [options] BSMAP_MAPPING_FILES"
+ parser = optparse.OptionParser(usage=usage)
+ 
+@@ -128,26 +129,32 @@
+ 
+ disp('writing %s ...' % options.outfile)
+ ss = {'C': '+', 'G': '-'}
++trint = {'CG[ACGT]$':'CPG','C[ACT]G$':'CHG', r"C[ACT][ACT]":'CHH', r"[ACGT]CG":'CPG',r"C[AGT]G":'CHG',r"[AGT][AGT]G":'CHH' }
+ fout = open(options.outfile, 'w')
+-z95, z95sq = 1.96, 1.96 * 1.96
+-fout.write('chr\tpos\tstrand\tcontext\tratio\ttotal_C\tmethy_C\tCI_lower\tCI_upper\n')
++
++fout.write('chr\tpos\tstrand\tcontext\tcoverage\tmethylated_C\tperc_methy_C\n')
+ nc, nd, dep0 = 0, 0, options.min_depth
+ for cr in sorted(depth.keys()):
+     depthcr, methcr, refcr = depth[cr], meth[cr], ref[cr]
+     for i, d in enumerate(depthcr):
++        if i < 2: continue
+         if d < dep0: continue
+         nc += 1
+         nd += d
+         m = methcr[i]
+         if m == 0 and not options.meth0: continue
+         ratio = float(m) / d
+-        seq = refcr[i-2:i+3]
+         strand = ss[refcr[i]]
+-        pmid = ratio + z95sq / (2 * d)
+-        sd = z95 * ((ratio*(1-ratio)/d + z95sq/(4*d*d)) ** 0.5)
+-        norminator = 1 + z95sq / d
+-        CIl, CIu = (pmid - sd) / norminator, (pmid + sd) / norminator
+-        fout.write('%s\t%d\t%c\t%s\t%.3f\t%d\t%d\t%.3f\t%.3f\n' % (cr, i+1, strand, seq, ratio, d, m, CIl, CIu))
++        if strand == '-':
++            seq = refcr[i-2:i+1]
++        else:
++            seq = refcr[i:i+3]
++    
++        for k, v in trint.items():
++            if re.match(k,seq):
++                context=v
++
++        fout.write('%s\t%d\t%c\t%s\t%d\t%d\t%.2f\n' % (cr, i+1, strand, context, d, m, m*100/d))
+ 
+ fout.close()
+ disp('done.')

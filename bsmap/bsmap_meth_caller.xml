@@ -1,0 +1,76 @@
+<tool id="bsmap_meth_caller" name="BSMAP Methylation Caller">
+	<requirements>
+	    <requirement type='package' version="2.6">bsmap</requirement>
+	    <requirement type='package'>samtools</requirement>
+	</requirements>
+        <command interpreter="bash">
+               bsmap_meth_caller.sh			
+			input=$bsmap_sam
+			unique=$unique
+			properly=$properly
+			zero_meth = $zero_meth
+			rem_dup = $rem_dup
+			combine_cpg = $combine_cpg
+			trimN = $trimN
+			depth = $depth			
+			output=$output
+			tempdir=$output.files_path
+			#if $refGenomeSource.genomeSource == "history":
+                                ref="${refGenomeSource.myFile}"
+                        #else
+                                ref="${refGenomeSource.builtinFile.fields.path}"
+                        #end if
+
+        </command>
+  <inputs>
+	<conditional name="refGenomeSource">
+      		<param name="genomeSource" type="select" label="Will you select a reference genome from your history or use a built-in reference?" help="Must be the same reference as used for the mapping">
+		        <option value="builtin">Use a built-in reference</option>
+		        <option value="history">Use one from the history</option>
+		</param>
+      		<when value="builtin">
+		        <param name="builtinFile" type="select" label="Select the reference genome">
+				<options from_data_table="bsmap_fasta">
+			 		<filter type="sort_by" column="2" />
+			                <validator type="no_options" message="No reference genomes are available" />
+			        </options>
+		        </param>
+	        </when>
+      		<when value="history">
+		        <param name="myFile" type="data" format="fasta" label="Select the reference genome" />
+	        </when>
+	</conditional>
+
+	<param name="bsmap_sam" format="sam" type="data" label="BSMAP mapping output file" help="Must be in SAM format" />
+	<param name="unique" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Process only unique mappings/pairs" />  
+	<param name="properly" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Process only properly paired mappings" /> 
+	<param name="zero_meth" type="boolean" truevalue="true" falsevalue="false" checked="True" label="report loci with zero methylation ratios" /> 
+	<param name="rem_dup" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Remove duplicated reads" />
+	<param name="combine_cpg" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Combine CpG methylaion ratios on both strands" />
+	<param name="trimN" type="integer" value="2" label="Trim N fill-in nucleotides in DNA fragment end-repairing" help="This option is only for pair-end mapping. For RRBS, N could be detetmined by the distance between cuttings sites on forward and reverse strands. For WGBS, N is usually between 0~3" />
+	<param name="depth" type="integer" value="1" label="Minimum sequencing depth to report loci" />
+  </inputs>
+  <outputs>
+	<data name="output" format ="bed" label="BSMAP methylation output" />
+  </outputs>
+  <help>
+**What it does**
+
+This methylation caller parses the BSMAP SAM output file into bed format.
+
+
+**Output format** ::
+
+
+  Column  			Description
+  ----------------------	--------------------------------------
+  1 chr				chromosome
+  2 pos 			position
+  3 strand 			strand
+  4 context 			context (CHH,CHG,CpG)
+  5 coverage 			totally sequenced Cs at that position
+  6 methylated			methylated Cs at that position
+  7 percentage methylated	percentage of 6
+  </help>
+</tool>
+
