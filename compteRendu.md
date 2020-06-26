@@ -134,21 +134,26 @@ planemo t --test_data ../../test-data	# Make tests to verify if modification is 
 
 #### Point bloquants, Questions
 
-* Les modification dans le fichiers macro.xml entraine des erreurs de correspondances avec les variables du fichier ncbi\_blastdbcmd_wrapper.xml
+* Les modification dans le fichiers **macro.xml** entraine des erreurs de correspondances avec les variables du fichier **ncbi\_blastdbcmd_wrapper.xml**
 
 #### Travail prévu
 
-* Modifier le fichier ncbi\_blastdbcmd\_wrapper.xml pour rendre les modifications du fichiers ncbi_macros.xml compatibles
+* Modifier le fichier **ncbi\_blastdbcmd\_wrapper.xml** pour rendre les modifications du fichiers **ncbi_macros.xml** compatibles
 
 
-### 08-12/06/2020
+### 15-19/06/2020
 #### Travail effectué
 
-* Modification du fichier ncbi\_blastdbcmd\_wrapper.xml pour qu'il permette de choisir une base de donnée provenant de l'historique. Pour voir les erreurs et tester le script les tests ont été fait en utilisant le `planemo s --no_cleanup --test_data test-data`.
+* Modification du fichier **ncbi\_blastdbcmd\_wrapper.xml** pour qu'il permette de choisir une base de donnée provenant de l'historique. Pour voir les erreurs et tester le script les tests ont été fait en utilisant le `planemo s --no_cleanup --test_data test-data`.
 
+* Ajout de la fonction *N\_DB\_SUBJECT\_ORIGIN* dans le fichier macros.xml pour avoir des noms de fichier en sortie qui correspondent au fichier donné en entré pour l'outil.
+
+* Réglage d'un problème de reconnaissance de variable entre le script **ncbi_macros.xml** et **ncbi\_blastdbcmd\_wrapper.xml**.
+
+* Préparation de la présentation du travail fait pendant les 4 premières semaines.
 #### Point bloquants, Questions
 
-Il y a eu des blocages une fois les modifications faites sur la ligne 17 du fichier ncbi\_blastdbcmd\_wrapper.xml
+Il y a eu des blocages une fois les modifications faites sur la ligne 17 du fichier **ncbi\_blastdbcmd\_wrapper.xml**
 ```
 	-db "{os.path.join($db_opts.db_origin.histdb.extra_files_path, "blastdb")}"
 ```
@@ -169,5 +174,27 @@ Mais cette syntaxe aussi est correcte
 	-db "$db_opts.db_origin.histdb.extra_files_path/blastdb"
 ```
 
+#### Travail prévu
+
+* Continuer la préparation de l'oral et faire la présentation le mardi 23 juin.
+
+* Faire un pull request des modifications faites.
+
+
+### 22-26/06/2020
+#### Travail effectué
+
+* Préparation de la présentation et présentation du travail de mi-parcours le mardi 23 juin.
+
+* Les commentaires inutiles ont été enlevés et une première tentative de pull request a été faite
+
+* Installation de l'outil bdmpap, des scripts xml, et blibliographie de l'outil bsmap afin de répondre à la seconde demande d'utilisateur
+
+#### Point bloquants, Questions
+
+* Le premier pull request semblait généré des erreurs à cause de tabulations mis dans le code, les tabulations ont donc été enlevé. Cette erreur est possiblement dû aux différentes versions de python utilisé entre moi-même (3.7) et peterjc (2.7)
+
+* Il manque des données test pour pouvoir tester l'outil bsmap au fur et à mesure des modifications.
+ 
 ## Conclusion
 
