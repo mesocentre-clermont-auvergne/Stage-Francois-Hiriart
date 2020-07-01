@@ -1,6 +1,6 @@
 <tool id="bsmap" name="BSMAP Mapper">
 	<requirements>
-	    <requirement type='package' version="2.6">bsmap</requirement>
+	    <requirement type='package' version="2.9">bsmap</requirement>
 	</requirements>
         <command interpreter="bash">
               bsmap_wrapper.sh
@@ -14,7 +14,7 @@
 			##Output files (SAM output, BSMAP summary)
 			mapped=$mapped
 			##Temp directory
-			tempdir=$mapped.files_path
+			##tempdir=$mapped.files_path
 			summary=$summary
 			#if str($singlePaired.sPaired) == "single":
 			  library="single"
@@ -183,13 +183,23 @@
   
  </inputs>
  <outputs>
-        <data name="mapped" format="sam" label="BSMAP Mapped Reads" />
+    <data name="mapped" format="sam" label="BSMAP Mapped Reads" />
 	<data name="summary" format="txt" label="BSMAP Mapping Summary" />
 	<data name="unpaired" format ="sam" label="BSMAP Unpaired Hits">
 	  <filter>(singlePaired['sPaired'] == 'paired')</filter>
 	</data>
 
  </outputs>
+ <tests>
+     <test>
+         <param name="singlePaired|sPaired" value="single"/>
+         <param name="singlePaired|sInput1" value="input1.fq"/>
+         <param name="refGenomeSource|genomeSource" value="history"/>
+         <param name="refGenomeSource|myFile" value="mm10.tiny.fa.gz"/>
+         <param name="singlePaired|sParams|sSettingsType" value="preSet"/>
+         <output name="mapped" file="testMapped1.sam" ftype="sam"/>
+     </test>
+ </tests>
  <help>
 **What it does**
 

@@ -121,13 +121,13 @@ then
     then      
       bsmap -a $mate1 -d $ref -o $mapped -R -r 0 -p 4 > $summary
     else
-      bsmap -a $mate1 -d $ref -o $mapped -R -r 0 -p 4 $qual $threshold $lowqual $adapter $firstn $repeat_reads $seed_size $mismatch $equal_best $start $end $index_interval $mode  > $summary
+      bsmap -a $mate1 -d $ref -o $mapped -R -r 0 -p 4 $qual $threshold $lowqual $adapter $firstn $repeat_reads $seed_size $mismatch $equal_best $start $end $index_interval $mode > $summary
     fi
 else
     if [ "$fullparam" == 'false' ]
     then
-      bsmap -a $mate1 -b $mate2 -2 $unpaired -d $ref -o $mapped -R -r 0 -p 4  > $summary
+      bsmap -a $mate1 -b $mate2 -2 $unpaired -d $ref -o $mapped -R -r 0 -p 4 >summary
     else
-      bsmap -a $mate1 -b $mate2 -2 $unpaired -d $ref -o $mapped -R -r 0 -p 4 $qual $threshold $lowqual $adapter $firstn $repeat_reads $seed_size $mismatch $equal_best $start $end $index_interval $mode $maxinsert $mininsert   > $summary
+      bsmap -a $mate1 -b $mate2 -2 $unpaired -d $ref -o $mapped -R -r 0 -p 4 $qual $threshold $lowqual $adapter $firstn $repeat_reads $seed_size $mismatch $equal_best $start $end $index_interval $mode $maxinsert $mininsert > $summary
     fi
 fi
