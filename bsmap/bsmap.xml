@@ -14,7 +14,7 @@
 			##Output files (SAM output, BSMAP summary)
 			mapped=$mapped
 			##Temp directory
-			##tempdir=$mapped.files_path
+			tempdir=$mapped.files_path
 			summary=$summary
 			#if str($singlePaired.sPaired) == "single":
 			  library="single"
