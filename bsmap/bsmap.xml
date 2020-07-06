@@ -1,6 +1,6 @@
 <tool id="bsmap" name="BSMAP Mapper">
 	<requirements>
-	    <requirement type='package' version="2.9">bsmap</requirement>
+	    <requirement type='package' version="2.90">bsmap</requirement>
 	</requirements>
         <command interpreter="bash">
               bsmap_wrapper.sh
@@ -36,7 +36,9 @@
 			    seed_random=$singlePaired.sParams.seed_random
 			    rrbs=$singlePaired.sParams.rrbs
 			    mode=$singlePaired.sParams.mode
-			    align_info=$singlePaired.sParams.align_info     
+			    align_info=$singlePaired.sParams.align_info
+			  #else:
+			    fullparam=false
 			  #end if
 			#else:
 			  library="paired"
@@ -62,7 +64,9 @@
 			    mode=$singlePaired.pParams.mode
 			    align_info=$singlePaired.pParams.align_info     
 			    maxinsert=$singlePaired.pParams.maxinsert  
-			    mininsert=$singlePaired.pParams.mininsert  
+			    mininsert=$singlePaired.pParams.mininsert
+			  #else:
+			    fullparam=false
 			  #end if
 			#end if
         </command>
@@ -198,6 +202,7 @@
          <param name="refGenomeSource|myFile" value="mm10.tiny.fa.gz"/>
          <param name="singlePaired|sParams|sSettingsType" value="preSet"/>
          <output name="mapped" file="testMapped1.sam" ftype="sam"/>
+         <!--<output name="summary" file="testSummary1.txt" ftype="txt"/>-->
      </test>
  </tests>
  <help>

@@ -1,0 +1,8 @@
+[bsmap] @Mon Jul  6 15:56:03 2020 	loading reference file: /tmp/tmp36gwf93a/files/b/6/0/dataset_b600008c-03ea-474e-8627-4d93a8e9659e.dat 	(format: FASTA)
+[bsmap] @Mon Jul  6 15:56:03 2020 	4 reference seqs loaded, total size 756159 bp. 0 secs passed
+[bsmap] @Mon Jul  6 15:56:04 2020 	create seed table. 1 secs passed
+[bsmap] @Mon Jul  6 15:56:04 2020 	Single-end alignment(4 threads),
+	Input read file: /tmp/tmp36gwf93a/files/4/c/5/dataset_4c5bfa97-9c7d-4c35-8b26-9235f13a9e12.dat 	(format: FASTQ)
+	Output file: /tmp/tmp36gwf93a/files/9/2/4/dataset_9246bf10-9a4f-4d79-bdcc-1dd1cb3d7e11.dat	 (format: BSP)
+[bsmap] @Mon Jul  6 15:56:04 2020 	total reads: 1000 	total time:  1 secs
+	aligned reads: 23 (2.3%), unique reads: 23 (2.3%), suppressed non-unique reads: 19 (1.9%)
