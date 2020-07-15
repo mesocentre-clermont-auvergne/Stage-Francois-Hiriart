@@ -188,13 +188,29 @@ Mais cette syntaxe aussi est correcte
 
 * Les commentaires inutiles ont été enlevés et une première tentative de pull request a été faite
 
-* Installation de l'outil bdmpap, des scripts xml, et blibliographie de l'outil bsmap afin de répondre à la seconde demande d'utilisateur
+* Installation de l'outil bsmpap, des scripts xml, et blibliographie de l'outil bsmap afin de répondre à la seconde demande d'utilisateur
 
 #### Point bloquants, Questions
 
 * Le premier pull request semblait généré des erreurs à cause de tabulations mis dans le code, les tabulations ont donc été enlevé. Cette erreur est possiblement dû aux différentes versions de python utilisé entre moi-même (3.7) et peterjc (2.7)
 
 * Il manque des données test pour pouvoir tester l'outil bsmap au fur et à mesure des modifications.
- 
+
+### 29/06-03/07 2020
+#### Travail effectué
+
+* Délétion des espaces à la fin de certaines lignes dans les scripts modifiés dans BLAST car cela générait des erreurs pour le pull request
+
+#### Point bloquants, Questions
+
+* Présence d'un bug lors de l'utilisation de bsmap sous `planemo serve` qui ne correspondait pas au bug décrit par l'utilisateur. Le bug présentait disait qu'il y avait une erreur alors que le bsmap ne faisait pas d'erreur et donnait un résultat. Pour tenter de régléer le problème, il y a eu des modifications dans les scripts xml qui appelait bsmap en précisant la nouvelle version de bsmap utilisé. Il y a aussi eu une installation de bsmap avec conda (qui à aussi rencontré certains problèmes, il manquait conda-build et le fait de vouloir upgrade conda-build une fois intallé entrainé des erreurs qui corrompait conda).
+
+### 06/07-10/07 2020
+#### Travail effectué
+
+* Résolution du bug sur bsmap, cela provenait du fait que la sortie du diagnostique des étapes de bsmap sur le nouvelle version était écrit dans la sortie erreur (stderr) ce qui ne devait pas être le cas précédement (stdin). Or pour le fichier log on prenait la sortie standard de bsmap pour le mettre dans le fichier log et vu que cet sortie était vide car envoyé maintenant dans la sortie erreur alors le fichier log était vide. La résolution du problème nous amène donc maintenant au bug décrit par l'utilisateur à savoir un argument inconnue "-2" est utilisé pour bsmap.
+
+* Début de la rédaction du rapport de stage
+
 ## Conclusion
 

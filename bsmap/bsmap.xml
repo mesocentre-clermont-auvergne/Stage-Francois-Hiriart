@@ -201,7 +201,7 @@
          <param name="refGenomeSource|genomeSource" value="history"/>
          <param name="refGenomeSource|myFile" value="mm10.tiny.fa.gz"/>
          <param name="singlePaired|sParams|sSettingsType" value="preSet"/>
-         <output name="mapped" file="testMapped1.sam" ftype="sam"/>
+         <output name="mapped" file="testMapped1" ftype="sam"/>
          <!--<output name="summary" file="testSummary1.txt" ftype="txt"/>-->
      </test>
  </tests>
